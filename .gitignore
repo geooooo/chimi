@@ -1,0 +1,6 @@
+# IDE
+.vscode/
+
+# Dart and pub
+**/.packages
+
