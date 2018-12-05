@@ -4,3 +4,9 @@
 # Dart and pub
 **/.packages
 
+# JS
+**/node_modules/
+
+# Template
+
+front/template/psd/

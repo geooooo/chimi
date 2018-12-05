@@ -1,0 +1,32 @@
+/* Общие стили */
+
+
+/* ============== Загружаемые шрифты ============== */
+
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+:root {
+  --font-roboto: 'Roboto', sans-serif;
+}
+
+
+/* ============== Цвета ============== */
+
+:root {
+  --color-gray-1: #dbdbe3;
+  --color-gray-2: #b8bbbf;
+  --color-gray-3: #c5c7cd;
+  --color-black-1: #222;
+  --color-green-1: #66cc66;
+  --color-green-2: #85d685;
+  --color-red-1: #a63f3f;
+  --color-white-1: #fff;
+}
+
+
+/* ============== Анимации ============== */
+
+:root {
+  --transition-timing-function: ease;
+  --transition-duration: 0.2s;
+}
