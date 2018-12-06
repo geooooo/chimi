@@ -39,11 +39,12 @@
 }
 
 .login-form__text-input {
+  padding: calc(var(--input-padding) / 2);
   width: 80%;
   font-size: 1.2rem;
   text-align: center;
   color: var(--color-black-1);
-  border-bottom: 2px solid var(--color-gray-2);
+  border-bottom: var(--border-width) solid var(--color-gray-2);
   transition-duration: var(--transition-duration);
   transition-timing-function: var(--transition-timing-function);
   transition-property: border-bottom-color;
@@ -57,12 +58,12 @@
 
 .login-form__login-button {
   padding: 10px 30px;
-  width: 80%;
+  width: 100%;
   font-size: 1.2rem;
   font-weight: bold;
   color: var(--color-white-1);
   background-color: var(--color-green-1);
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   cursor: pointer;
   user-select: none;
   transition-duration: var(--transition-duration);

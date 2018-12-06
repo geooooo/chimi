@@ -30,3 +30,12 @@
   --transition-timing-function: ease;
   --transition-duration: 0.2s;
 }
+
+
+/* ============== Другие стили ============== */
+
+:root {
+  --border-radius: 5px;
+  --border-width: 2px;
+  --input-padding: 8px;
+}
