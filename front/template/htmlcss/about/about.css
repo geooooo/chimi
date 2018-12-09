@@ -1,0 +1,42 @@
+@import url("../reset.css");
+@import url("../theme.css");
+
+
+/* ============== main ============== */
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+
+/* ============== content ============== */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  color: var(--color-black-1);
+}
+
+.content__row {
+  padding: 10px 0;
+}
+.content__row:last-child {
+  display: flex;
+  justify-content: flex-end;
+}
+
+
+/* ============== text ============== */
+
+.text {}
+.text_blue-1 {
+  color: #00559A;
+}
+.text_blue-2 {
+  color: #00B4F5;
+}
+
