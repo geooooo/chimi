@@ -37,11 +37,6 @@
 /* ============== avatar ============== */
 
 .avatar {
-  width: 120px;
-  height: 120px;
-  background-image: url("guest.png");
-  background-repeat: no-repeat;
-  background-size: cover;
   border-radius: 100%;
 }
 
