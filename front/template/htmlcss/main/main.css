@@ -46,6 +46,7 @@
 .menu {
   padding-top: 2rem;
   user-select: none;
+  list-style-type: none;
 }
 
 .menu__item {
@@ -114,7 +115,7 @@
 
   .menu__item {
     border-top-left-radius: 30% 50%;
-  border-bottom-left-radius: 30% 50%;
+    border-bottom-left-radius: 30% 50%;
   }
 
   .menu__item a {

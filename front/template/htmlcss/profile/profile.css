@@ -34,6 +34,13 @@
   text-align: center;
   color: var(--color-black-1);
   font-size: 1.5rem;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: var(--transition-timing-function);
+  transition-property: color;
+  cursor: pointer;
+}
+.user__login:hover {
+  color: var(--color-gray-2);
 }
 
 .user__avatar {
