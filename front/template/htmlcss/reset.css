@@ -1,3 +1,6 @@
+@import url("theme.css");
+
+
 /* Сброс стилей */
 
 * {
@@ -10,8 +13,12 @@
     background-color: transparent;
 }
 
+
+/* Общие стили */
+
 html,
 body {
   height: 100%;
   font-size: 16px;
+  font-family: var(--font-roboto);
 }
