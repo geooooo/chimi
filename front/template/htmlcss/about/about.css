@@ -34,9 +34,9 @@
 
 .text {}
 .text_blue-1 {
-  color: #00559A;
+  color: var(--color-blue-1);
 }
 .text_blue-2 {
-  color: #00B4F5;
+  color: var(--color-blue-2);
 }
 
