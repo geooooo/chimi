@@ -1,0 +1,125 @@
+/* ============== main ============== */
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  background-color: var(--color-gray-1);
+}
+
+
+/* ============== chat ============== */
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  height: 100%;
+  list-style-type: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.chat__message {
+  margin-bottom: 10px;
+  color: var(--color-black-1);
+}
+.chat__message:last-child {
+  margin-bottom: 0;
+}
+.chat__message_person-1 {
+  align-self: flex-start;
+}
+.chat__message_person-1::after {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 20px;
+  background-color: var(--color-white-1);
+  border-bottom-right-radius: 100%;
+  border-bottom-left-radius: 100%;
+  border-left: calc(var(--border-width) * 2) solid var(--color-green-1);
+  border-right: calc(var(--border-width) * 2) solid var(--color-green-1);
+}
+.chat__message_person-2 {
+  align-self: flex-end;
+}
+.chat__message_person-2::after {
+  position: relative;
+  left: calc(100% - 10px - calc(var(--border-width) * 2) * 2);
+  content: "";
+  display: block;
+  width: 10px;
+  height: 20px;
+  background-color: var(--color-white-1);
+  border-bottom-right-radius: 100%;
+  border-bottom-left-radius: 100%;
+  border-left: calc(var(--border-width) * 2) solid var(--color-blue-2);
+  border-right: calc(var(--border-width) * 2) solid var(--color-blue-2);
+}
+
+.chat__text {
+  padding: 15px 30px;
+  background-color: var(--color-white-1);
+}
+
+.chat__message_person-1 .chat__text {
+  border-left: calc(var(--border-width) * 2) solid var(--color-green-1);
+  border-top-right-radius: 20% 50%;
+  border-bottom-right-radius: 20% 50%;
+  border-top-left-radius: 20% 50%;
+}
+.chat__message_person-2 .chat__text {
+  border-right: calc(var(--border-width) * 2) solid var(--color-blue-2);
+  border-top-left-radius: 20% 50%;
+  border-bottom-left-radius: 20% 50%;
+  border-top-right-radius: 20% 50%;
+}
+
+
+/* ============== chat-form ============== */
+
+.chat-form {
+  padding: 10px;
+  background-color: var(--color-black-1);
+}
+
+.chat-form__row {
+  display: flex;
+  padding: 10px 0;
+}
+
+.chat-form__text-input {
+  padding: var(--input-padding);
+  width: 100%;
+  font-size: 1.2rem;
+  color: var(--color-black-1);
+  border-radius: var(--border-radius);
+  background-color: var(--color-white-1);
+  transition-duration: var(--transition-duration);
+  transition-timing-function: var(--transition-timing-function);
+  transition-property: box-shadow;
+}
+.chat-form__text-input:focus {
+  box-shadow: 0 0 calc(var(--border-width) * 3) 0px var(--color-gray-1);
+}
+
+.chat-form__send-button {
+  padding: 10px 30px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--color-white-1);
+  background-color: var(--color-green-1);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  user-select: none;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: var(--transition-timing-function);
+  transition-property: background-color;
+}
+.chat-form__send-button:hover,
+.chat-form__send-button:focus,
+.chat-form__send-button:active {
+  background-color: var(--color-green-2);
+}

@@ -2,3 +2,5 @@ name: front
 environment:
   sdk: '>=2.0.0 <3.0.0'
 dependencies:
+  build_runner: '>=0.8.10 <0.11.0'
+  build_web_compilers: '>=0.3.6 <0.5.0'

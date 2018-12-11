@@ -1,0 +1,46 @@
+/* ============== main ============== */
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+
+/* ============== content ============== */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  color: var(--color-black-1);
+}
+
+.content__row {
+  padding: 10px 0;
+}
+
+
+/* ============== user ============== */
+
+.user {}
+
+.user__login {
+  text-align: center;
+  color: var(--color-black-1);
+  font-size: 1.5rem;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: var(--transition-timing-function);
+  transition-property: color;
+  cursor: pointer;
+}
+.user__login:hover {
+  color: var(--color-gray-2);
+}
+
+.user__avatar {
+  user-select: none;
+  border-radius: 100%;
+}
+

@@ -3,6 +3,8 @@
 
 # Dart and pub
 **/.packages
+**/.dart_tool/
+**/dev/
 
 # JS
 **/node_modules/

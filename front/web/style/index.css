@@ -1,0 +1,16 @@
+/* Главный стилевой файл */
+
+@import url("general/reset.css");
+@import url("general/theme.css");
+@import url("general/spinner.css");
+
+@import url("page/about.css");
+@import url("page/add_contact.css");
+@import url("page/chat.css");
+@import url("page/contacts.css");
+@import url("page/messages.css");
+@import url("page/profile.css");
+@import url("page/registration.css");
+@import url("page/login.css");
+@import url("page/menu.css");
+
