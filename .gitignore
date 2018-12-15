@@ -5,12 +5,14 @@
 **/.packages
 **/.dart_tool/
 **/dev/
+**/build/
 
 # JS
 **/node_modules/
 
 # Template
 front/template/psd/
+back/uploads/
 
 # Mobile app
 mobile/

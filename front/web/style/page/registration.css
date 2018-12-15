@@ -1,12 +1,12 @@
-/* ============== main ============== */
+/* ============== registration ============== */
 
-.main {
+.registration {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-.main__content {
+.registration__content {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,7 +15,7 @@
   overflow: hidden;
 }
 
-.main__footer {
+.registration__footer {
   padding: 20px;
   background-color: var(--color-black-1);
 }
@@ -38,7 +38,7 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding-right: 1rem;
+  padding-right: 2rem;
   width: 40%;
   font-size: 1.2rem;
   cursor: pointer;
@@ -69,7 +69,7 @@
 .registration-form__avatar {
   width: 120px;
   height: 120px;
-  background-image: url("guest.png");
+  background-image: url("../../img/guest.png");
   background-repeat: no-repeat;
   background-size: cover;
   border-radius: 100%;
@@ -104,10 +104,14 @@
 }
 
 .registration-form__error-message {
+  display: none;
   padding: 10px 0;
   width: 100%;
   text-align: center;
   color: var(--color-red-1);
+}
+.registration-form__error-message_show {
+  display: block;
 }
 
 

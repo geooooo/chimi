@@ -3,6 +3,7 @@
 @import url("general/reset.css");
 @import url("general/theme.css");
 @import url("general/spinner.css");
+@import url("general/router.css");
 
 @import url("page/about.css");
 @import url("page/add_contact.css");

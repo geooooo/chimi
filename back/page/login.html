@@ -1,45 +1,27 @@
-<!DOCTYPE html>
-<html>
+<div class="login">
 
-
-<head>
-  <title>login</title>
-  <meta charset="utf-8">
-  <link rel="stylesheet" type="text/css" href="login.css">
-</head>
-
-
-<body>
-
-  <div class="main">
-
-    <div class="main__content">
-      <form class="login-form" action="#" method="#">
-        <div class="login-form__row">
-          <input class="login-form__text-input" name="#" type="text" placeholder="Логин">
-        </div>
-        <div class="login-form__row">
-          <input class="login-form__text-input" name="#" type="text" placeholder="Пароль">
-        </div>
-        <div class="login-form__row">
-          <button class="login-form__login-button" type="submit">Войти</button>
-        </div>
-        <div class="login-form__row">
-          <div class="login-form__error-message">Неверный логин или пароль !</div>
-        </div>
-        <div class="login-form__row">
-          <button class="login-form__reg-button" type="submit">Регистрация</button>
-        </div>
-      </form>
-    </div>
-
-    <div class="main__footer">
-      <!-- NOTE: дипазон дат -->
-      <div class="copyright">&copy; 2017-2018 Юрий Корниенко</div>
-    </div>
-
+  <div class="login__content">
+    <form class="login-form">
+      <div class="login-form__row">
+        <input class="login-form__text-input" id="loginInput" type="text" placeholder="Логин">
+      </div>
+      <div class="login-form__row">
+        <input class="login-form__text-input" id="passwordInput" type="password" placeholder="Пароль">
+      </div>
+      <div class="login-form__row">
+        <button class="login-form__login-button" id="loginButton" type="submit">Войти</button>
+      </div>
+      <div class="login-form__row">
+        <div class="login-form__error-message" id="errorMessage">Неверный логин или пароль !</div>
+      </div>
+      <div class="login-form__row">
+        <button class="login-form__reg-button" id="regButton" type="submit">Регистрация</button>
+      </div>
+    </form>
   </div>
 
-</body>
+  <div class="login__footer">
+    <div class="copyright">&copy; 2017-<span id="nowYear"></span> Юрий Корниенко</div>
+  </div>
 
-</html>
+</div>

@@ -1,4 +1,6 @@
-import 'package:front/src/router.dart';
+import 'package:front/src/context.dart';
 
 
-void registration(Router router) {}
+void registration(Context context) {
+  print('registration');
+}

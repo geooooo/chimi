@@ -1,4 +1,4 @@
-import 'package:front/src/router.dart';
+import 'package:front/src/context.dart';
 
 
-void profile(Router router) {}
+void profile(Context context) {}

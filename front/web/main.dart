@@ -1,5 +1,5 @@
 import 'package:front/front.dart';
 
 
-void main() async
+Future<void> main() async
   => await router.go('login');

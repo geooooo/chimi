@@ -1,4 +1,4 @@
-import 'package:front/src/router.dart';
+import 'package:front/src/context.dart';
 
 
-void contacts(Router router) {}
+void contacts(Context context) {}

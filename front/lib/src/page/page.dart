@@ -1,4 +1,4 @@
-import 'package:front/src/router.dart';
+import 'package:front/src/context.dart';
 
 import 'src/about.dart';
 import 'src/addContact.dart';
@@ -11,16 +11,16 @@ import 'src/profile.dart';
 import 'src/registration.dart';
 
 
-typedef _PageCallback = void Function(Router router);
+typedef _PageCallback = void Function(Context context);
 
 final pages = <String, _PageCallback>{
-  'about': (router) => about(router),
-  'profile': (router) => profile(router),
-  'addContact': (router) => addContact(router),
-  'messages': (router) => messages(router),
-  'contacts': (router) => contacts(router),
-  'registration': (router) => registration(router),
-  'login': (router) => login(router),
-  'chat': (router) => chat(router),
-  'menu': (router) => menu(router),
+  'about': about,
+  'profile': profile,
+  'addContact': addContact,
+  'messages': messages,
+  'contacts': contacts,
+  'registration': registration,
+  'login': login,
+  'chat': chat,
+  'menu': menu,
 };
