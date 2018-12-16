@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:body_parser/body_parser.dart';
 import 'package:random_string/random_string.dart';
+import 'package:ansicolor/ansicolor.dart';
 
 import 'db.dart';
 
@@ -24,6 +25,8 @@ class MainServer {
         InternetAddress.loopbackIPv4,
         MainServer._instance._port
       );
+      final pen = AnsiPen()..cyan();
+      print('Главный сервер запущен на ${pen('localhost:' + port.toString())} ...');
       MainServer._instance._listen();
       MainServer._instance._db = await Db.connect();
     }
@@ -33,7 +36,10 @@ class MainServer {
   /// Обработка запросов
   void _listen() {
     MainServer._instance._httpServer.listen((HttpRequest request) async {
-      print('${request.method} ${request.uri.path}');
+      final penMethod = AnsiPen()..red(bg: true);
+      final penMain = AnsiPen()..cyan(bg: true)..black();
+      final penPath = AnsiPen()..red();
+      print('${penMain('MAIN:')} ${penMethod(request.method)} ${penPath(request.uri.path)}');
       request.response.statusCode = 200;
       request.response.headers.add('Access-Control-Allow-Origin', '*');
       request.response.headers.add('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, DELETE');
@@ -55,7 +61,9 @@ class MainServer {
                    (request.uri.path.indexOf(RegExp(r'/uploads/')) != -1);
     if (!isUpload) return false;
     final fileName = request.uri.path.split(RegExp(r'^/uploads/')).last;
-    print('<<< uploads "$fileName"');
+    final penPage = AnsiPen()..magenta();
+    final penArrow = AnsiPen()..gray();
+    print('\t${penArrow('<<<')}uploads ${penPage(fileName)}\n');
     final fileData = await File('uploads/$fileName').readAsBytes();
     request.response.add(fileData);
     return true;
@@ -69,7 +77,9 @@ class MainServer {
     if (!isPage) return false;
     final pageName = request.uri.path.split(RegExp(r'^/page/'))
                                 .last.split('/').last;
-    print('<<< page "$pageName"');
+    final penPage = AnsiPen()..magenta();
+    final penArrow = AnsiPen()..gray();
+    print('\t${penArrow('<<<')}page ${penPage(pageName)}\n');
     final fileData = await File('page/${pageName}.html').readAsBytes();
     request.response.add(fileData);
     return true;
