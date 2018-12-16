@@ -71,18 +71,22 @@ class Db {
   Future<Map<String, dynamic>> login(String login, String password) async {
     final result = <String, dynamic>{
       'success': false,
-      'avatarPath': '',
+      'avatar_path': '',
     };
     final queryResult = await this._db.query('''
       SELECT
-        id
+        avatar_path
       FROM
         user
       WHERE
         login = '${login}' AND
         password = '${password}'
-    ''').first;
-    return result; //TODO:
+    ''').toList();
+    if (!queryResult.isEmpty) {
+      result['success'] = true;
+      result['avatar_path'] = queryResult[0]['avatar_path'];
+    }
+    return result;
   }
 
   /// Проверка существования пользователя с указаным логином [login]
@@ -114,9 +118,6 @@ class Db {
 
   /// Получение информации о профиле пользователя
   Future<Map<String, String>> profile(String login) async {
-    final result = <String, String>{
-      'avatarPath': '',
-    };
     final queryResult = await this._db.query('''
       SELECT
         avatar_path
@@ -124,10 +125,13 @@ class Db {
         user
       WHERE
         login = '${login}'
-    ''');
-    return result; //TODO:
+    ''').toList();
+    return {
+      'avatar_path': queryResult[0]['avatar_path'],
+    };
   }
 
+  /// Получение идентификатора пользователя по его логину [login]
   Future<int> _userIdByLogin(String login) async {
     final queryResult = await this._db.query('''
       SELECT
@@ -136,26 +140,50 @@ class Db {
         user
       WHERE
         login = '${login}'
-    ''');
-    var id = 0; //TODO:
-    return id;
+    ''').toList();
+    return queryResult[0][0];
+  }
+
+  /// Проверка наличия в друзьях пользователя с идентификатором
+  /// [idFriend] у пользователя [idOwner]
+  Future<bool> _hasFriend(int idOwner, int idFriend) async {
+    final queryResult = await this._db.query('''
+      SELECT
+        id
+      FROM
+        contact
+      WHERE
+        user_owner_id = $idOwner AND
+        user_friend_id = $idFriend
+    ''').toList();
+    return !queryResult.isEmpty;
   }
 
   /// Добавление пользователя с логином [loginFriend] в список
   /// контактов [loginOwner]
   Future<bool> addContact(String loginOwner, String loginFriend) async {
+    if (loginFriend == loginOwner) return false;
     if (!(await this.existsLogin(loginFriend))) {
       return false;
     }
     var idOwner = await this._userIdByLogin(loginOwner);
     var idFriend = await this._userIdByLogin(loginFriend);
-    final queryResult = await this._db.query('''
+    if (await this._hasFriend(idOwner, idFriend)) {
+      return false;
+    }
+    await this._db.execute('''
       INSERT INTO contact
-        (id_owner, id_friend)
+        (user_owner_id, user_friend_id)
       VALUES
         ($idOwner, $idFriend)
     ''');
-    return false; //TODO:
+    await this._db.execute('''
+      INSERT INTO contact
+        (user_owner_id, user_friend_id)
+      VALUES
+        ($idFriend, $idOwner)
+    ''');
+    return true;
   }
 
   /// Получение списка контактов пользователя с логином [login]
@@ -170,8 +198,16 @@ class Db {
         user
       INNER JOIN contact
       ON contact.user_owner_id = $ownerId
-    ''');
-    return result; //TODO:
+      WHERE
+        user.id = contact.user_friend_id
+    ''').toList();
+    for (var row in queryResult) {
+      result.add({
+        'login': row['login'],
+        'avatar_path': row['avatar_path'],
+      });
+    }
+    return result;
   }
 
   /// Получение списка сообщений для пользователя с логином [login]
@@ -189,6 +225,20 @@ class Db {
       ON message.user_owner_id = $ownerId
     ''');
     return result; //TODO:
+  }
+
+  /// Удаление пользователя с логином [loginFriend] из списка друзей [loginOwner]
+  Future<bool> deleteContact(String loginOwner, String loginFriend) async {
+    final idOwner = await this._userIdByLogin(loginOwner);
+    final idFriend = await this._userIdByLogin(loginFriend);
+    await this._db.execute('''
+      DELETE FROM
+        contact
+      WHERE
+        user_owner_id = '${idOwner}' AND user_friend_id = '${idFriend}' OR
+        user_owner_id = '${idFriend}' AND user_friend_id = '${idOwner}'
+    ''');
+    return true;
   }
 
 }

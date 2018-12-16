@@ -5,6 +5,7 @@ import 'router.dart';
 class Context {
 
   final Router router;
+  static const href = 'http://localhost:8082';
 
   Context(this.router);
 

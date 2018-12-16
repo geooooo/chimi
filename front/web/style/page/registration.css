@@ -65,6 +65,9 @@
    display: flex;
    width: 60%;
 }
+.registration-form__avatar-container input[type='file'] {
+  display: none;
+}
 
 .registration-form__avatar {
   width: 120px;

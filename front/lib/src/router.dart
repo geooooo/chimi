@@ -20,7 +20,6 @@ class Router {
   /// Переход на страницу по указаному роуту [route]
   Future<void> go(String path) async {
     this._spinner.show();
-    // window.history.replaceState(null, path, path);
     // Получение адреса запроса по заданому роуту
     final pathParts = path.split('/');
     final routerDepth = pathParts.length;
@@ -39,6 +38,7 @@ class Router {
       routerElement = routerElement.querySelector('.router');
     }
     routerElement.innerHtml = pageData;
+    this._spinner.move(routerElement);
     route['_callback'](this._context);
     this._spinner.hide();
   }

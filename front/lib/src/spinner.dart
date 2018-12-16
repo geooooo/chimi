@@ -12,4 +12,9 @@ class Spinner {
   void hide() =>
     this._element.classes.remove('spinner_show');
 
+  /// Переместить спиннер в другой элемент
+  void move(HtmlElement target) {
+    target.append(this._element);
+  }
+
 }

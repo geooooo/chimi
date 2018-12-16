@@ -1,8 +1,17 @@
-/* ============== main ============== */
+/* ============== menu-page ============== */
 
-.main {
+.menu-page {
   display: flex;
   height: 100%;
+}
+
+.menu-page__content {
+  position: relative;
+  z-index: 100;
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-gray-1);
+  overflow: hidden;
 }
 
 
@@ -58,6 +67,9 @@
 .menu__item_active {
   background-color: var(--color-green-1);
 }
+.menu__item_active a * {
+  color: var(--color-white-1) !important;
+}
 
 .menu__item a {
   display: flex;
@@ -81,17 +93,6 @@
 }
 
 .menu__text {}
-
-
-/* ============== content ============== */
-
-.content {
-  position: relative;
-  z-index: 100;
-  height: 100%;
-  width: 100%;
-  background-color: var(--color-gray-1);
-}
 
 
 /* ============== media query ============== */

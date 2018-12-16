@@ -41,17 +41,17 @@
 
 /* ============== user ============== */
 
-.user {
+.messages .user {
   display: flex;
   align-items: center;
 }
 
-.user__avatar {
+.messages .user__avatar {
   border-radius: 100%;
   user-select: none;
 }
 
-.user__login {
+.messages .user__login {
   padding-left: 2rem;
   font-size: 1.2rem;
   color: var(--color-white-1);

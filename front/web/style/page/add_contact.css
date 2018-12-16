@@ -1,6 +1,6 @@
-/* ============== main ============== */
+/* ============== add-contact ============== */
 
-.main {
+.add-contact {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -62,7 +62,11 @@
 }
 
 .add-form__error-message {
+  display: none;
   padding: 10px 0;
   color: var(--color-red-1);
+}
+.add-form__error-message_show {
+  display: block;
 }
 

@@ -5,39 +5,40 @@
 
       <label class="registration-form__row">
         <div class="registration-form__label">Логин:</div>
-        <input class="registration-form__text-input" name="#" type="text">
+        <input class="registration-form__text-input" id="loginInput" type="text">
       </label>
 
       <label class="registration-form__row">
         <div class="registration-form__label">Пароль:</div>
-        <input class="registration-form__text-input" name="#" type="password">
+        <input class="registration-form__text-input" id="passwordInput" type="password">
       </label>
 
       <label class="registration-form__row">
         <div class="registration-form__label">Повторить пароль:</div>
-        <input class="registration-form__text-input" name="#" type="password">
+        <input class="registration-form__text-input" id="passwordRepeatInput" type="password">
       </label>
 
       <div class="registration-form__row">
-        <div class="registration-form__label">Аватарка:</div>
+        <div class="registration-form__label" id="avatarLabel">Аватарка:</div>
         <div class="registration-form__avatar-container">
-          <div class="registration-form__avatar"></div>
+          <input type="file" id="fileInput">
+          <div class="registration-form__avatar" id="avatarElement"></div>
         </div>
       </div>
 
       <div class="registration-form__row">
-        <button class="registration-form__reg-button" type="submit">Регистрация</button>
+        <button class="registration-form__reg-button" id="regButton" type="submit">Регистрация</button>
       </div>
 
       <div class="registration-form__row">
-        <div class="registration-form__error-message">Заполните все поля !</div>
+        <div class="registration-form__error-message" id="errorMessage">Заполните все поля !</div>
       </div>
 
     </form>
   </div>
 
   <div class="registration__footer">
-    <div class="copyright">&copy; 2017-<span id="nowYear"><span> Юрий Корниенко</div>
+    <div class="copyright">&copy; 2017-<span id="nowYear"></span> Юрий Корниенко</div>
   </div>
 
 </div>

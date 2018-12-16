@@ -29,7 +29,7 @@ final router = Router({
         '_href': 'http://$_hostname/page/profile',
         '_callback': pages['profile'],
       },
-      'add': {
+      'addContact': {
         '_href': 'http://$_hostname/page/add_contact',
         '_callback': pages['addContact'],
       },
