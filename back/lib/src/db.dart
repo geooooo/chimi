@@ -218,13 +218,30 @@ class Db {
       SELECT
         user.login,
         user.avatar_path,
-        message_waiting.count AS new_message_count
+        message_waiting.count
       FROM
         user
-      INNER JOIN message
-      ON message.user_owner_id = $ownerId
-    ''');
-    return result; //TODO:
+      INNER JOIN
+        contact
+      ON
+        contact.user_friend_id = $ownerId
+      INNER JOIN
+        message_waiting
+      ON
+        message_waiting.user_friend_id = $ownerId
+      WHERE
+        user.id = contact.user_owner_id AND
+        user.id = message_waiting.user_owner_id AND
+        message_waiting.count > 0
+    ''').toList();
+    for (var row in queryResult) {
+      result.add({
+        'login': row['login'],
+        'avatar_path': row['avatar_path'],
+        'count': row['count'].toString(),
+      });
+    }
+    return result;
   }
 
   /// Удаление пользователя с логином [loginFriend] из списка друзей [loginOwner]
@@ -238,38 +255,101 @@ class Db {
         user_owner_id = '${idOwner}' AND user_friend_id = '${idFriend}' OR
         user_owner_id = '${idFriend}' AND user_friend_id = '${idOwner}'
     ''');
+    await this._db.execute('''
+      DELETE FROM
+        message_waiting
+      WHERE
+        user_owner_id = '${idOwner}' AND user_friend_id = '${idFriend}' OR
+        user_owner_id = '${idFriend}' AND user_friend_id = '${idOwner}'
+    ''');
+    await this._db.execute('''
+      DELETE FROM
+        message
+      WHERE
+        user_owner_id = '${idOwner}' AND user_friend_id = '${idFriend}' OR
+        user_owner_id = '${idFriend}' AND user_friend_id = '${idOwner}'
+    ''');
+    return true;
+  }
+
+  /// Удаление записи о непрочитанных сообщениях от пользователя [loginOwner] у [loginFriend]
+  Future<bool> readMessage(String loginOwner, String loginFriend) async {
+    final idOwner = await this._userIdByLogin(loginOwner);
+    final idFriend = await this._userIdByLogin(loginFriend);
+    await this._db.execute('''
+      UPDATE
+        message_waiting
+      SET
+        count = 0
+      WHERE
+        user_owner_id = '${idOwner}' AND user_friend_id = '${idFriend}'
+    ''');
+    return true;
+  }
+
+  /// Получение списка сообщений чата пользователей [loginOwner] и [loginFriend]
+  Future<List<Map<String, dynamic>>> chatMessages(String loginOwner, String loginFriend) async {
+    final result = <Map<String, dynamic>>[];
+    final idOwner = await this._userIdByLogin(loginOwner);
+    final idFriend = await this._userIdByLogin(loginFriend);
+    final queryResult = await this._db.query('''
+      SELECT
+        user_owner_id as id,
+        text
+      FROM
+        message
+      WHERE
+        user_owner_id = '${idOwner}' AND user_friend_id = '${idFriend}' OR
+        user_owner_id = '${idFriend}' AND user_friend_id = '${idOwner}'
+      ORDER BY
+        time
+    ''').toList();
+    for (var row in queryResult) {
+      result.add({
+        'person': (row['id'] == idOwner)? 1 : 2,
+        'text': row['text'],
+      });
+    }
+    return result;
+  }
+
+  /// Запись сообщения [message] от пользователя [loginOwner] для [loginFriend]
+  Future<bool> writeMessage(String loginOwner, String loginFriend, String message) async {
+    final idOwner = await this._userIdByLogin(loginOwner);
+    final idFriend = await this._userIdByLogin(loginFriend);
+    final time = DateTime.now().millisecondsSinceEpoch;
+    await this._db.execute('''
+      INSERT INTO message
+        (user_owner_id, user_friend_id, text, time)
+      VALUES
+        ($idOwner, $idFriend, '$message', $time)
+    ''');
+    final queryResult = await this._db.query('''
+      SELECT
+        id
+      FROM
+        message_waiting
+      WHERE
+        user_owner_id = '${idOwner}' AND user_friend_id = '${idFriend}'
+    ''').toList();
+    if (queryResult.isEmpty) {
+      await this._db.execute('''
+        INSERT INTO message_waiting
+          (user_owner_id, user_friend_id, count)
+        VALUES
+          ($idOwner, $idFriend, 1)
+      ''');
+    } else {
+      await this._db.execute('''
+        UPDATE
+          message_waiting
+        SET
+          count = count + 1
+        WHERE
+          user_owner_id = '${idOwner}' AND user_friend_id = '${idFriend}'
+      ''');
+    }
     return true;
   }
 
 }
-
-/*
-
-user
-  id int pk
-  login str nn u
-  password str nn
-  avatar_path str nn
-
-message
-  id int pk
-  text str nn
-  user_owner_id int fk
-  user_friend_id int fk
-  time timestamp nn
-n --- n
-
-message_waiting
-  id int pk
-  user_owner_id int fk
-  user_friend_id int fk
-  count int nn
-n --- n
-
-contact
-  id int pk
-  user_owner_id int fk
-  user_friend_id int fk
-n --- n
-
-*/

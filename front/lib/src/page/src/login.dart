@@ -9,8 +9,8 @@ void login(Context context) {
   //NOTE:
   /*(() async {
     final data = json.encode({
-      'login': 'vasia',
-      'password': '123456',
+      'login': 'gimler',
+      'password': 'onetwo',
     });
     final request = await HttpRequest.request(
       '${Context.href}/login',
@@ -20,8 +20,10 @@ void login(Context context) {
     final response = request.response.toString();
     final responseData = json.decode(response);
     window.sessionStorage['avatar_path'] = '${Context.href}/${responseData['avatar_path']}';
-    window.sessionStorage['login'] = 'vasia';
+    window.sessionStorage['login'] = 'gimler';
+    window.sessionStorage['login_friend'] = 'hanz';
     await context.router.go('menu');
+    await context.router.go('menu/chat');
   }());
   return;*/
 

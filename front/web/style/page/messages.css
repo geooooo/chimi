@@ -1,25 +1,23 @@
-/* ============== main ============== */
-
-.main {
-  display: flex;
-  justify-content: center;
-  height: 100%;
-  background-color: var(--color-gray-1);
-}
-
-
 /* ============== messages ============== */
 
 .messages {
-  /* padding: 20px 40px; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   list-style-type: none;
+  height: 100%;
+  background-color: var(--color-gray-1);
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 .messages__item {
-  display: flex;
+  display: inline-flex;
   justify-content: space-between;
   margin: 20px 0;
   padding: 10px;
+  width: 80%;
+  min-height: 80px;
   background-color: var(--color-gray-2);
   border-top-right-radius: calc(var(--border-radius) * 3);
   border-bottom-right-radius: calc(var(--border-radius) * 3);

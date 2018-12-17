@@ -28,6 +28,7 @@ void addContact(Context context) {
     }
     errorElement.classes.remove('login-form__error-message_show');
     window.alert('Пользователь успешно добавлен !');
+    loginInput.value = '';
   });
 
 }

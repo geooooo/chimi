@@ -11,8 +11,11 @@ const contactTemplate = '''
       <div class="user__login">{login}</div>
     </div>
     <div class="controls">
-      <div class="controls__button" title="Удалить контакт">
-        <i class="deleteButton material-icons" data-login="{login}">delete</i>
+      <div class="controls__button">
+        <i class="writeButton material-icons" title="Написать сообщение" data-login="{login}">edit</i>
+      </div>
+      <div class="controls__button">
+        <i class="deleteButton material-icons" title="Удалить контакт" data-login="{login}">delete</i>
       </div>
     </div>
   </li>
@@ -43,17 +46,33 @@ void contacts(Context context) async {
     for (var i = 0; i < imgs.length; i++) {
       imgs[i].src = '${Context.href}/${responseData[i]['avatar_path']}';
     }
+    // Удаление контакта
     contactsElement.querySelectorAll('.deleteButton').forEach((Element button) {
       button.onClick.listen((MouseEvent event) async {
         await HttpRequest.request(
           '${Context.href}/contact',
-          method: 'DELETE',
+          method: 'delete',
           sendData: json.encode(<String, String>{
             'login_owner': window.sessionStorage['login'],
             'login_friend': button.dataset['login']
           }),
         );
         button.parent.parent.parent.remove();
+      });
+    });
+    // Написать сообщение
+    contactsElement.querySelectorAll('.writeButton').forEach((Element button) {
+      button.onClick.listen((MouseEvent event) async {
+        await HttpRequest.request(
+          '${Context.href}/read',
+          method: 'post',
+          sendData: json.encode(<String, String>{
+            'login_owner': button.dataset['login'],
+            'login_friend': window.sessionStorage['login']
+          }),
+        );
+        window.sessionStorage['login_friend'] = button.dataset['login'];
+        await context.router.go('menu/chat');
       });
     });
   });

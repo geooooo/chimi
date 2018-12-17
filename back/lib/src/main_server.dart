@@ -36,10 +36,6 @@ class MainServer {
   /// Обработка запросов
   void _listen() {
     MainServer._instance._httpServer.listen((HttpRequest request) async {
-      final penMethod = AnsiPen()..red(bg: true);
-      final penMain = AnsiPen()..cyan(bg: true)..black();
-      final penPath = AnsiPen()..red();
-      print('${penMain('MAIN:')} ${penMethod(request.method)} ${penPath(request.uri.path)}');
       request.response.statusCode = 200;
       request.response.headers.add('Access-Control-Allow-Origin', '*');
       request.response.headers.add('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, DELETE');
@@ -61,9 +57,12 @@ class MainServer {
                    (request.uri.path.indexOf(RegExp(r'/uploads/')) != -1);
     if (!isUpload) return false;
     final fileName = request.uri.path.split(RegExp(r'^/uploads/')).last;
-    final penPage = AnsiPen()..magenta();
-    final penArrow = AnsiPen()..gray();
-    print('\t${penArrow('<<<')}uploads ${penPage(fileName)}\n');
+    final penMain = AnsiPen()..cyan(bg: true)..black();
+    final penMethod = AnsiPen()..red(bg: true);
+    final penPath = AnsiPen()..red();
+    print('${penMain('MAIN: STATIC')} ${penMethod(request.method)} ${penPath(request.uri.toString())}');
+    final penPage = AnsiPen()..red();
+    print('\t<<<uploads ${penPage(fileName)}\n');
     final fileData = await File('uploads/$fileName').readAsBytes();
     request.response.add(fileData);
     return true;
@@ -77,9 +76,12 @@ class MainServer {
     if (!isPage) return false;
     final pageName = request.uri.path.split(RegExp(r'^/page/'))
                                 .last.split('/').last;
-    final penPage = AnsiPen()..magenta();
-    final penArrow = AnsiPen()..gray();
-    print('\t${penArrow('<<<')}page ${penPage(pageName)}\n');
+    final penMain = AnsiPen()..cyan(bg: true)..black();
+    final penMethod = AnsiPen()..red(bg: true);
+    final penPath = AnsiPen()..red();
+    print('${penMain('MAIN: STATIC')} ${penMethod(request.method)} ${penPath(request.uri.toString())}');
+    final penPage = AnsiPen()..red();
+    print('\t<<<page ${penPage(pageName)}\n');
     final fileData = await File('page/${pageName}.html').readAsBytes();
     request.response.add(fileData);
     return true;
@@ -98,6 +100,10 @@ class MainServer {
   /// Роутинг REST API
   Future<bool> _restAPI(HttpRequest request) async {
     request.response.headers.contentType = ContentType.json;
+    final penMain = AnsiPen()..cyan(bg: true)..black();
+    final penMethod = AnsiPen()..magenta(bg: true);
+    final penPath = AnsiPen()..magenta();
+    print('${penMain('MAIN: API')} ${penMethod(request.method)} ${penPath(request.uri.path)}');
     // Отправка данных для входа в приложение
     if ((request.method.toLowerCase() == 'post') &&
         (request.uri.path.indexOf('/login') == 0))
@@ -162,7 +168,7 @@ class MainServer {
       request.response.write(json.encode(result));
       return true;
     }
-    // Получение добавление пользователя в список контактов
+    // Добавление пользователя в список контактов
     if ((request.method.toLowerCase() == 'post') &&
         (request.uri.path.indexOf('/contact') == 0))
     {
@@ -181,6 +187,46 @@ class MainServer {
       final loginFriend = parsedBody['login_friend'].trim();
       final loginOwner = parsedBody['login_owner'].trim();
       return await this._db.deleteContact(loginOwner, loginFriend);
+    }
+    // Получение списка контактов, от которых приходили сообщения
+    if ((request.method.toLowerCase() == 'get') &&
+        (request.uri.path.indexOf('/messages') == 0))
+    {
+      final login = request.uri.queryParameters['login'];
+      final result = await this._db.messages(login);
+      request.response.write(json.encode(result));
+      return true;
+    }
+    // Отметка прочитанных сообщений
+    if ((request.method.toLowerCase() == 'post') &&
+        (request.uri.path.indexOf('/read') == 0))
+    {
+      final parsedBody = json.decode(await request.transform(Utf8Decoder()).join());
+      final loginOwner = parsedBody['login_owner'].toString().trim();
+      final loginFriend = parsedBody['login_friend'].toString().trim();
+      await this._db.readMessage(loginOwner, loginFriend);
+      return true;
+    }
+    // Отправка сообщения
+    if ((request.method.toLowerCase() == 'post') &&
+        (request.uri.path.indexOf('/message') == 0))
+    {
+      final parsedBody = json.decode(await request.transform(Utf8Decoder()).join());
+      final loginOwner = parsedBody['login_owner'].toString().trim();
+      final loginFriend = parsedBody['login_friend'].toString().trim();
+      final message = parsedBody['message'].toString().trim();
+      await this._db.writeMessage(loginOwner, loginFriend, message);
+      return true;
+    }
+    // Получение сообщений чата
+    if ((request.method.toLowerCase() == 'get') &&
+        (request.uri.path.indexOf('/oldmessages') == 0))
+    {
+      final login_owner = request.uri.queryParameters['login_owner'];
+      final login_friend = request.uri.queryParameters['login_friend'];
+      final result = await this._db.chatMessages(login_owner, login_friend);
+      request.response.write(json.encode(result));
+      return true;
     }
     return false;
   }
