@@ -10,6 +10,23 @@ void chat(Context context) {
   final sendButton = querySelector('#sendButton');
   final chatElement = querySelector('#chatElement');
 
+  context.openSocket();
+  context.socket.onOpen.listen(
+    (_) => context.socket.send('in ${window.sessionStorage['login']}-${window.sessionStorage['login_friend']}')
+  );
+  context.socket.onMessage.listen((MessageEvent event) {
+    final data = (event.data as String).split(' ');
+    final eventName = data[0];
+    final params = data.sublist(1);
+    switch (eventName) {
+      case 'write':
+        final text = params.join(' ');
+        chatElement.innerHtml += createMessage(text, 2);
+        chatElement.children.last.scrollIntoView();
+        break;
+    }
+  });
+
   getMessages(chatElement);
 
   sendButton.onClick.listen((MouseEvent event) async {
@@ -17,17 +34,9 @@ void chat(Context context) {
     final message = messageInput.value.trim();
     messageInput.value = '';
     if (message.isEmpty) return;
-    final data = json.encode({
-      'login_owner': window.sessionStorage['login'],
-      'login_friend': window.sessionStorage['login_friend'],
-      'message': message,
-    });
-    HttpRequest.request(
-      '${Context.href}/message',
-      method: 'post',
-      sendData: data,
-    );
+    context.socket.send('write ${window.sessionStorage['login']}-${window.sessionStorage['login_friend']} $message');
     chatElement.innerHtml += createMessage(message, 1);
+    chatElement.children.last.scrollIntoView();
   });
 
 }
@@ -61,6 +70,9 @@ Future<void> getMessages(Element chatElement) async {
     final responseData = json.decode(response);
     for (var message in responseData) {
       chatElement.innerHtml += createMessage(message['text'], message['person']);
+    }
+    if (!chatElement.children.isEmpty) {
+      chatElement.children.last.scrollIntoView();
     }
   });
 

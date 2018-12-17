@@ -20,6 +20,7 @@ class Router {
   /// Переход на страницу по указаному роуту [route]
   Future<void> go(String path) async {
     this._spinner.show();
+    this._context.closeSocket();
     // Получение адреса запроса по заданому роуту
     final pathParts = path.split('/');
     final routerDepth = pathParts.length;

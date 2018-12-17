@@ -6,27 +6,6 @@ import 'package:front/src/context.dart';
 
 void login(Context context) {
 
-  //NOTE:
-  /*(() async {
-    final data = json.encode({
-      'login': 'gimler',
-      'password': 'onetwo',
-    });
-    final request = await HttpRequest.request(
-      '${Context.href}/login',
-      method: 'post',
-      sendData: data,
-    );
-    final response = request.response.toString();
-    final responseData = json.decode(response);
-    window.sessionStorage['avatar_path'] = '${Context.href}/${responseData['avatar_path']}';
-    window.sessionStorage['login'] = 'gimler';
-    window.sessionStorage['login_friend'] = 'hanz';
-    await context.router.go('menu');
-    await context.router.go('menu/chat');
-  }());
-  return;*/
-
   // Получение ссылок на элементы
   final InputElement loginInput = querySelector('#loginInput');
   final InputElement passwordInput = querySelector('#passwordInput');

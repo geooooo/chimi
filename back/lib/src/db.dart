@@ -314,7 +314,7 @@ class Db {
   }
 
   /// Запись сообщения [message] от пользователя [loginOwner] для [loginFriend]
-  Future<bool> writeMessage(String loginOwner, String loginFriend, String message) async {
+  Future<bool> writeMessage(String loginOwner, String loginFriend, String message, bool isInc) async {
     final idOwner = await this._userIdByLogin(loginOwner);
     final idFriend = await this._userIdByLogin(loginFriend);
     final time = DateTime.now().millisecondsSinceEpoch;
@@ -324,6 +324,7 @@ class Db {
       VALUES
         ($idOwner, $idFriend, '$message', $time)
     ''');
+    if (!isInc) return true;
     final queryResult = await this._db.query('''
       SELECT
         id

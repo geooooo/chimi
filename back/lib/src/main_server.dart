@@ -15,6 +15,7 @@ class MainServer {
   Db _db;
   int _port;
   HttpServer _httpServer;
+  final Map<String, dynamic> _sockets = {};
 
   /// Запуск сервера на заданом порту [port]
   static Future<MainServer> run([int port = 8082]) async {
@@ -48,7 +49,88 @@ class MainServer {
   Future<void> _routing(HttpRequest request) async {
     if (await this._pageRouting(request)) return;
     if (await this._uploadRouting(request)) return;
+    if (await this._websocketRouting(request)) return;
     if (await this._restAPI(request)) return;
+  }
+
+  /// Обработка соединений на веб сокетах
+  Future<bool> _websocketRouting(HttpRequest request) async {
+    if (!request.uri.path.startsWith('/ws')) return false;
+    final ws = await WebSocketTransformer.upgrade(request);
+    ws.listen((dynamic data) async {
+      final splittedData = data.toString().split(' ');
+      final event = splittedData[0];
+      final params = splittedData.sublist(1);
+      final mainPen = AnsiPen()..green(bg: true)..black();
+      final eventPen = AnsiPen()..green();
+      final paramsPen = AnsiPen()..blue();
+      print('${mainPen('SOCKET:')} ${eventPen(event)} ${paramsPen(params.toString())}\n');
+      switch (event) {
+        // in sender-receiver
+        case 'in':
+          final logins = params[0].split('-');
+          final sender = logins[0];
+          final receiver = logins[1];
+          final key1 = '$sender-$receiver';
+          final key2 = '$receiver-$sender';
+          if (this._sockets.containsKey(key1)) {
+            this._sockets[key1][sender] = ws;
+          } else if (this._sockets.containsKey(key2)) {
+            this._sockets[key2][sender] = ws;
+          } else {
+            this._sockets[key1] = {
+              sender: ws,
+            };
+          }
+          break;
+        // out sender-receiver
+        case 'out':
+          final logins = params[0].split('-');
+          final sender = logins[0];
+          final receiver = logins[1];
+          final key1 = '$sender-$receiver';
+          final key2 = '$receiver-$sender';
+          if (this._sockets.containsKey(key1)) {
+            (this._sockets[key1][sender] as WebSocket).close();
+            (this._sockets[key1] as Map).remove(sender);
+            if (!(this._sockets[key1] as Map).containsKey(receiver)) {
+              this._sockets.remove(key1);
+            }
+          } else {
+            (this._sockets[key2][sender] as WebSocket).close();
+            (this._sockets[key2] as Map).remove(sender);
+            if (!(this._sockets[key2] as Map).containsKey(receiver)) {
+              this._sockets.remove(key2);
+            }
+          }
+          break;
+        // write sender-receiver message
+        case 'write':
+          final logins = params[0].split('-');
+          final sender = logins[0];
+          final receiver = logins[1];
+          final text = params.sublist(1).join(' ');
+          final key1 = '$sender-$receiver';
+          final key2 = '$receiver-$sender';
+          var isInc = true;
+          if (this._sockets.containsKey(key1)) {
+            if (this._sockets[key1].containsKey(receiver)) {
+              this._sockets[key1][receiver].add('write $text');
+              isInc = false;
+            }
+          } else if (this._sockets[key2].containsKey(receiver)) {
+            this._sockets[key2][receiver].add('write $text');
+            isInc = false;
+          }
+          await this._db.writeMessage(sender, receiver, text, isInc);
+          break;
+        case 'info':
+          final socketPen = AnsiPen()..white(bg: true)..black();
+          print('${socketPen(this._sockets.toString())}\n');
+          break;
+      }
+    });
+    return true;
   }
 
   /// Роутинг загруженных файлов
@@ -103,7 +185,7 @@ class MainServer {
     final penMain = AnsiPen()..cyan(bg: true)..black();
     final penMethod = AnsiPen()..magenta(bg: true);
     final penPath = AnsiPen()..magenta();
-    print('${penMain('MAIN: API')} ${penMethod(request.method)} ${penPath(request.uri.path)}');
+    print('${penMain('MAIN: API')} ${penMethod(request.method)} ${penPath(request.uri.path)}\n');
     // Отправка данных для входа в приложение
     if ((request.method.toLowerCase() == 'post') &&
         (request.uri.path.indexOf('/login') == 0))
@@ -205,17 +287,6 @@ class MainServer {
       final loginOwner = parsedBody['login_owner'].toString().trim();
       final loginFriend = parsedBody['login_friend'].toString().trim();
       await this._db.readMessage(loginOwner, loginFriend);
-      return true;
-    }
-    // Отправка сообщения
-    if ((request.method.toLowerCase() == 'post') &&
-        (request.uri.path.indexOf('/message') == 0))
-    {
-      final parsedBody = json.decode(await request.transform(Utf8Decoder()).join());
-      final loginOwner = parsedBody['login_owner'].toString().trim();
-      final loginFriend = parsedBody['login_friend'].toString().trim();
-      final message = parsedBody['message'].toString().trim();
-      await this._db.writeMessage(loginOwner, loginFriend, message);
       return true;
     }
     // Получение сообщений чата
