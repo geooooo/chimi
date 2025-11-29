@@ -1,4 +1,4 @@
-# Мини соцсеть - чат CHIMI
+# Mini Social Network - CHIMI Chat
 
-Frontend и Backend написаны без использования каких-либо фреймворков
-типа AngularDart и Aqueduct, т.к. основной задачей при написании приложения было - попробовать стандатрные возможности языка
+The frontend and backend were written without any frameworks
+like AngularDart and Aqueduct, as the main goal when writing the application was to test the standard language features.
